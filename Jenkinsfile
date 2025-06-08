@@ -1,5 +1,6 @@
 pipeline {
     agent any
+
     stages {
         stage('Build') {
             steps {
@@ -8,10 +9,8 @@ pipeline {
                 archiveArtifacts artifacts: 'dist/trainSchedule.zip'
             }
         }
-    }
-}
 
- stage('DeployToStaging') {
+        stage('DeployToStaging') {
             when {
                 branch 'master'
             }
@@ -23,10 +22,6 @@ pipeline {
                         publishers: [
                             sshPublisherDesc(
                                 configName: 'staging',
-                                sshCredentials: [
-                                    username: "$USERNAME",
-                                    encryptedPassphrase: "$USERPASS"
-                                ], 
                                 transfers: [
                                     sshTransfer(
                                         sourceFiles: 'dist/trainSchedule.zip',
@@ -41,3 +36,5 @@ pipeline {
                 }
             }
         }
+    }
+}
